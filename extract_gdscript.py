@@ -13,33 +13,39 @@ IGNORE_FOLDERS = {
     "cache",
     ".import"
 }
-I = 0
+
 with open(OUTPUT_FILE, "w", encoding="utf-8") as output:
 
-    # Walk through folders
+    # Walk through every folder/subfolder
     for root, dirs, files in os.walk(PROJECT_FOLDER):
-        i = 0
-        # Remove ignored folders from traversal
+
+        # Skip ignored folders
         dirs[:] = [d for d in dirs if d not in IGNORE_FOLDERS]
 
         for file in files:
-            # Only .gd files
+
+            # Only read .gd files
             if file.endswith(".gd"):
-                I += 1
+
                 file_path = os.path.join(root, file)
 
                 try:
+                    # Read script content
                     with open(file_path, "r", encoding="utf-8") as gd_file:
                         content = gd_file.read()
 
-                    # Write file path + content
-                    output.write(f"\n===== {file_path} =====\n")
+                    # Write filename on top
+                    output.write(f"{file}:\n")
+
+                    # Write script content
                     output.write(content)
+
+                    # Add spacing between scripts
                     output.write("\n\n")
 
                     print(f"Added: {file_path}")
-                 
+
                 except Exception as e:
                     print(f"Failed to read {file_path}: {e}")
-print(f"Total .gd files extracted: {I}")
+
 print("Done.")
